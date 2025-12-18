@@ -171,7 +171,7 @@ function Registry-PathUninstall {
 
     foreach ($guid in $GUIDS) {
         Write-Host "Uninstalling $guid"
-        Start-Process "msiexec.exe" -ArgumentList "/qn /x $guid" -Wait
+        Start-Process "msiexec.exe" -ArgumentList "/qn /x$guid" -Wait
     }
     Get-AppxPackage -AllUsers -Publisher \"CN=520D4CDF-A287-4423-AB88-D88CCF7E866D\" | Remove-AppxPackage -AllUsers
     Get-AppxPackage -AllUsers -Publisher \"CN=14C847C8-791E-46EB-9C0D-7CADAF31C930\" | Remove-AppxPackage -AllUsers
