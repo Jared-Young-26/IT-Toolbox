@@ -153,12 +153,26 @@ ForEach-Object { $_.Uninstall() }
 }
 
 function Registry-PathUninstall {
-    Start-Process "msiexec.exe" -ArgumentList '/qn /x {0B48E952-494A-408B-8D9D-5F3331F96659}' -Wait
-    Start-Process "msiexec.exe" -ArgumentList '/qn /x {5536CC89-01C4-4120-B4ED-AFDBC6626A48}' -Wait
-    Start-Process "msiexec.exe" -ArgumentList '/qn /x {97CE6D18-8335-4420-A7C7-A72B8AFAFFFD}' -Wait
-    Start-Process "msiexec.exe" -ArgumentList '/qn /x {CC15AA48-F58F-4205-BB77-AE02A58B1F4D}' -Wait
-    Start-Process "msiexec.exe" -ArgumentList '/qn /x {D32679F0-C481-4A49-BA3F-EF2F2EFD0775}' -Wait
-    Start-Process "msiexec.exe" -ArgumentList '/qn /x {E82B4BDF-8120-4DC9-9BCB-20505E2E3C47}' -Wait
+
+    $GUIDS = @(
+        {0B48E952-494A-408B-8D9D-5F3331F96659},
+        {5536CC89-01C4-4120-B4ED-AFDBC6626A48},
+        {97CE6D18-8335-4420-A7C7-A72B8AFAFFFD},
+        {CC15AA48-F58F-4205-BB77-AE02A58B1F4D},
+        {D32679F0-C481-4A49-BA3F-EF2F2EFD0775},
+        {E82B4BDF-8120-4DC9-9BCB-20505E2E3C47},
+        {DDC69433-03CB-4AB4-B8F4-CBB7B03A9D16},
+        {0B48E952-494A-408B-8D9D-5F3331F96659},
+        {4DD1A19E-EBE1-401C-A950-A6380CCE8882},
+        {7F9518EA-F585-4C03-A8F2-7A6587C5BC88},
+        {97CE6D18-8335-4420-A7C7-A72B8AFAFFFD},
+        {C7669FC5-CF14-4E5B-92CE-5ED29B1BF446}
+    )
+
+    for $guid in $GUIDS {
+        Write-Host "Uninstalling $guid"
+        Start-Process "msiexec.exe" -ArgumentList "/qn /x $guid" -Wait
+    }
     Get-AppxPackage -AllUsers -Publisher \"CN=520D4CDF-A287-4423-AB88-D88CCF7E866D\" | Remove-AppxPackage -AllUsers
     Get-AppxPackage -AllUsers -Publisher \"CN=14C847C8-791E-46EB-9C0D-7CADAF31C930\" | Remove-AppxPackage -AllUsers
     Get-AppxPackage -AllUsers -Publisher \"CN=78A2D367-878A-4A64-8AC0-55373B990090\" | Remove-AppxPackage -AllUsers
