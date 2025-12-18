@@ -151,3 +151,17 @@ Get-WmiObject Win32_Product |
 Where-Object { $_.Name -like "*Samsung Device Care*" } |
 ForEach-Object { $_.Uninstall() }
 }
+
+function Registry-PathUninstall {
+    MsiExec.exe /q /x {0B48E952-494A-408B-8D9D-5F3331F96659}
+    MsiExec.exe /q /x {5536CC89-01C4-4120-B4ED-AFDBC6626A48}
+    MsiExec.exe /q /x {97CE6D18-8335-4420-A7C7-A72B8AFAFFFD}
+    MsiExec.exe /q /x {CC15AA48-F58F-4205-BB77-AE02A58B1F4D}
+    MsiExec.exe /q /x {D32679F0-C481-4A49-BA3F-EF2F2EFD0775}
+    MsiExec.exe /q /x {E82B4BDF-8120-4DC9-9BCB-20505E2E3C47}
+    Get-AppxPackage -AllUsers -Publisher \"CN=520D4CDF-A287-4423-AB88-D88CCF7E866D\" | Remove-AppxPackage -AllUsers
+    Get-AppxPackage -AllUsers -Publisher \"CN=14C847C8-791E-46EB-9C0D-7CADAF31C930\" | Remove-AppxPackage -AllUsers
+    Get-AppxPackage -AllUsers -Publisher \"CN=78A2D367-878A-4A64-8AC0-55373B990090\" | Remove-AppxPackage -AllUsers
+    Get-AppxPackage -AllUsers -Publisher \"CN=7114E541-2A85-4D4F-87D3-EF523CD29723\" | Remove-AppxPackage -AllUsers
+    Get-AppxPackage -AllUsers -Publisher \"CN=C763A64C-9802-4DC0-94E4-F882A0000049\" | Remove-AppxPackage -AllUsers
+}
