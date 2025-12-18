@@ -89,5 +89,65 @@ Where-Object { $_.DisplayName -like "*Samsung*" } |
 Select DisplayName, UninstallString
 }
 
-# Execute the removal function
-audit-removal
+function Samsung-Services{
+    Get-Service | Where-Object { $_.DisplayName -like "*Samsung*" -or $_.Name -like "*Samsung*" }
+
+}
+
+function Samsung-ScheduledTasks{
+    Get-ScheduledTask | Where-Object {$_.TaskName -like "*Samsung*" -or $_.TaskPath -like "*Samsung*"}
+}
+
+function Samsung-InstallDirectories{
+    $paths = @(
+    "C:\Program Files\Samsung",
+    "C:\Program Files (x86)\Samsung",
+    "$env:LOCALAPPDATA\Samsung",
+    "$env:APPDATA\Samsung",
+    "C:\ProgramData\Samsung"
+)
+
+$paths | ForEach-Object {
+    if (Test-Path $_) { Get-ChildItem $_ -Recurse -ErrorAction SilentlyContinue }
+}
+}
+
+function Samsung-Recon {
+    Samsung-Services
+    Samsung-ScheduledTasks
+    Samsung-InstallDirectories
+}
+
+function Disable-SamsungServices {
+    Get-Service | Where-Object { $_.Name -like "*Samsung*" } | ForEach-Object {
+    Stop-Service $_.Name -Force -ErrorAction SilentlyContinue
+    Set-Service $_.Name -StartupType Disabled
+}
+}
+
+function Disable-SamsungScheduledTasks {
+    Get-ScheduledTask | Where-Object {
+    $_.TaskName -like "*Samsung*" -or $_.TaskPath -like "*Samsung*"
+} | Disable-ScheduledTask
+}
+
+function Remove-SamsungInstallDirectories {
+    $RemovePaths = @(
+    "C:\Program Files\Samsung",
+    "C:\Program Files (x86)\Samsung",
+    "C:\ProgramData\Samsung",
+    "$env:LOCALAPPDATA\Samsung",
+    "$env:APPDATA\Samsung"
+)
+
+foreach ($path in $RemovePaths) {
+    if (Test-Path $path) {
+        Write-Host "Removing $path"
+        Remove-Item $path -Recurse -Force
+    }
+}
+
+Get-WmiObject Win32_Product |
+Where-Object { $_.Name -like "*Samsung Device Care*" } |
+ForEach-Object { $_.Uninstall() }
+}
