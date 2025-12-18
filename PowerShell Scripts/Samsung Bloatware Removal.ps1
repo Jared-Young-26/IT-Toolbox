@@ -169,7 +169,7 @@ function Registry-PathUninstall {
         {C7669FC5-CF14-4E5B-92CE-5ED29B1BF446}
     )
 
-    for $guid in $GUIDS {
+    foreach ($guid in $GUIDS) {
         Write-Host "Uninstalling $guid"
         Start-Process "msiexec.exe" -ArgumentList "/qn /x $guid" -Wait
     }
